@@ -1,0 +1,51 @@
+db.finvizDaily.aggregate([
+       {
+          "$match": {
+             "$and": [
+                { "date":'2019-11-27' },
+                {
+                   "symbol": {
+                      "$ne":'GOOG', "$ne":'BRK-B', "$ne":'RDS-B', "$ne":'PBR-A'
+                   }
+                },
+                {
+                    "industry": { "$ne":'Exchange Traded Fund' }
+                }
+             ]
+          }
+       },
+       {
+          "$group": {
+             "_id": "$sector",
+             "count": { "$sum":1 },
+             "marketCap": { "$sum":"$marketCap" },
+             "revenue": {
+                 "$sum": {
+                     "$switch": {
+                          "branches": [
+                             {"case": {"$eq": ["$ps", '\\N']}, "then": 0 },
+                             {"case": {"$eq": ["$ps", 0]}, "then": 0 }
+                              ],
+                           "default": { "$divide": ["$marketCap", "$ps"] }
+                          }
+                      }
+                   },
+               "earnings":{
+                   "$sum": {
+                       "$switch": {
+                          "branches": [
+                             {"case": {"$eq": ["$eps", '\\N']}, "then": 0 },
+                             {"case": {"$eq": ["$outstandingShares", '\\N']}, "then": 0 },
+                          ],
+                          "default": { "$multiply": ["$outstandingShares", "$eps"] }
+                       }
+                   }
+               }
+          }
+       },
+       {
+          "$sort": {
+             "marketCap": -1
+          }
+       }
+    ])
