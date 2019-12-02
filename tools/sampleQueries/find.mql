@@ -1,5 +1,5 @@
 db.finvizDaily.find(
 	{"date": "2019-11-27", "sector": "Technology"},
-	{"date": 1, "symbol": 1, "sector": 1, "industry": 1, "price": 1, "marketCap": 1, "volume": 1, "pe": 1, "_id": 0}
+	{"date": 1, "symbol": 1, "sector": 1, "industry": 1, "price": 1, "marketCap": 1, "volume": 1, "pe": 1, "_id": 0, "rsi": 1}
 )
 
