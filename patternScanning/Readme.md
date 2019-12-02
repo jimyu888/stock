@@ -1,8 +1,11 @@
 # pattern1.py
-scan stock.finvizDaily on pattern1, find:
-	- 1w return, maxReturn, maxDrawDown
-	- 2w return, maxReturn, maxDrawDown
-	- 3w return, maxReturn, maxDrawDown
-	- 1m return, maxReturn, maxDrawDown
-	- 2m return, maxReturn, maxDrawDown
-	- 3m return, maxReturn, maxDrawDown
+Eps increase
+
+# pattern2.py
+Revenue increase
+
+# pattern3.py
+Revenue or eps increase
+
+# pattern4.py
+Revenue and eps increase
