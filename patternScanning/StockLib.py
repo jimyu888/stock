@@ -64,6 +64,14 @@ class StockLib:
 
         return (pct, minPct, maxPct)
 
+    def calcRevenue(self, data):
+        if 'marketCap' in data and data['marketCap'] and data['marketCap']!='\N' and 'ps' in data and data['ps'] and data['ps']!='\N':
+            data['revenue'] = data['marketCap'] / data['ps']
+
+    def calcEarnings(self, data):
+        if 'outstandingShares' in data and data['outstandingShares'] and data['outstandingShares']!='\N' and 'eps' in data and data['eps'] and data['eps']!='\N':
+            data['earnings'] = data['outstandingShares'] * data['eps']
+
     def getEpsIncrease(self, db, symbol, startDateStr, endDateStr):
         finvizDaily = db['finvizDaily']
         query = {
@@ -73,12 +81,14 @@ class StockLib:
                 {'date': {'$lte': endDateStr}}
             ]
         }
-        output = {'symbol':1, 'eps':1, 'date':1,'_id':0}
+        output = {'symbol':1, 'marketCap':1, 'ps':1, 'eps':1, 'date':1, '_id':0, 'price':1, 'pe':1, 'sector':1, 'industry':1, 'outstandingShares':1, 'perfMonth':1, 'perfQuarter':1}
         cursor = finvizDaily.find(query, output).sort([('date',1)])
         result = list(cursor)
         data = []
         for i in range(1,len(result)):
             if result[i]['eps']!='\N' and result[i-1]['eps']!='\N' and result[i]['eps']>result[i-1]['eps']:
+                self.calcRevenue(result[i])
+                self.calcEarnings(result[i])
                 data.append(result[i])
         return data
 
@@ -91,7 +101,7 @@ class StockLib:
                 {'date': {'$lte': endDateStr}}
             ]
         }
-        output = {'symbol':1, 'marketCap':1, 'ps':1, 'date':1,'_id':0}
+        output = {'symbol':1, 'marketCap':1, 'ps':1, 'eps':1, 'date':1, '_id':0, 'price':1, 'pe':1, 'sector':1, 'industry':1, 'outstandingShares':1, 'perfMonth':1, 'perfQuarter':1}
         cursor = finvizDaily.find(query, output).sort([('date',1)])
         result = list(cursor)
         data = []
@@ -101,7 +111,8 @@ class StockLib:
                 currentRevenue = result[i]['marketCap'] / result[i]['ps']
                 revenueChange = (currentRevenue - previousRevenue)/previousRevenue
                 if revenueChange>0.01:
-                    result[i]['revenue'] = result[i]['marketCap'] / result[i]['ps']
+                    self.calcRevenue(result[i])
+                    self.calcEarnings(result[i])
                     data.append(result[i])
         return data
 
@@ -114,7 +125,7 @@ class StockLib:
                 {'date': {'$lte': endDateStr}}
             ]
         }
-        output = {'symbol':1, 'marketCap':1, 'eps':1, 'ps':1, 'date':1,'_id':0}
+        output = {'symbol':1, 'marketCap':1, 'ps':1, 'eps':1, 'date':1, '_id':0, 'price':1, 'pe':1, 'sector':1, 'industry':1, 'outstandingShares':1, 'perfMonth':1, 'perfQuarter':1}
         cursor = finvizDaily.find(query, output).sort([('date',1)])
         result = list(cursor)
         data = []
@@ -124,7 +135,8 @@ class StockLib:
                 currentRevenue = result[i]['marketCap'] / result[i]['ps']
                 revenueChange = (currentRevenue - previousRevenue)/previousRevenue
                 if revenueChange>0.01 and result[i]['eps']>result[i-1]['eps']:
-                    result[i]['revenue'] = result[i]['marketCap'] / result[i]['ps']
+                    self.calcRevenue(result[i])
+                    self.calcEarnings(result[i])
                     data.append(result[i])
         return data
 
@@ -137,7 +149,7 @@ class StockLib:
                 {'date': {'$lte': endDateStr}}
             ]
         }
-        output = {'symbol':1, 'marketCap':1, 'eps':1, 'ps':1, 'date':1,'_id':0}
+        output = {'symbol':1, 'marketCap':1, 'ps':1, 'eps':1, 'date':1, '_id':0, 'price':1, 'pe':1, 'sector':1, 'industry':1, 'outstandingShares':1, 'perfMonth':1, 'perfQuarter':1}
         cursor = finvizDaily.find(query, output).sort([('date',1)])
         result = list(cursor)
         data = []
@@ -147,11 +159,12 @@ class StockLib:
                 currentRevenue = result[i]['marketCap'] / result[i]['ps']
                 revenueChange = (currentRevenue - previousRevenue)/previousRevenue
                 if (revenueChange>0.01 and result[i]['eps']>result[i-1]['eps']) or (abs(revenueChange)<0.005 and result[i]['eps']>result[i-1]['eps']) or (revenueChange>0.01 and result[i]['eps']==result[i-1]['eps']):
-                    result[i]['revenue'] = result[i]['marketCap'] / result[i]['ps']
+                    self.calcRevenue(result[i])
+                    self.calcEarnings(result[i])
                     data.append(result[i])
         return data
 
-    def getStockSymbols(self, db, startDateStr, endDateStr):
+    def getStockSymbols(self, db, startDateStr, endDateStr, marketCapThreshold):
         finvizDaily = db['finvizDaily']
         query = {
             '$and': [
@@ -162,11 +175,58 @@ class StockLib:
                 {'symbol': {'$ne':'RDS-B'}},
                 {'symbol': {'$ne':'PBR-A'}},
                 {'industry': { '$ne': 'Exchange Traded Fund' }},
-                {'marketCap': {'$gte': 100000}}
+                {'marketCap': {'$gte': marketCapThreshold}}
             ]
         }
         cursor = finvizDaily.distinct('symbol', query)
         result = list(cursor)
 	return result
+
+    def savePatternStats(self, db, patternId, \
+            date, symbol, \
+            price, marketCap, eps, revenue, earnings, pe, sector, industry, \
+            perfMonth, perfQuarter, \
+            pct1w, minPct1w, maxPct1w, \
+            pct2w, minPct2w, maxPct2w, \
+            pct3w, minPct3w, maxPct3w, \
+            pct1m, minPct1m, maxPct1m, \
+            pct2m, minPct2m, maxPct2m, \
+            pct3m, minPct3m, maxPct3m, \
+            pct6m, minPct6m, maxPct6m, \
+            pct1y, minPct1y, maxPct1y):
+        patternStats = db['patternStats']
+        (pct1wSPY, minPct1wSPY, maxPct1wSPY) = self.getReturn(db, 'SPY', date, 7)
+        (pct1mSPY, minPct1mSPY, maxPct1mSPY) = self.getReturn(db, 'SPY', date, 30)
+        (pct3mSPY, minPct3mSPY, maxPct3mSPY) = self.getReturn(db, 'SPY', date, 92)
+        (pct1ySPY, minPct1ySPY, maxPct1ySPY) = self.getReturn(db, 'SPY', date, 365)
+        data = {
+            'patternId': patternId,
+            'date': date,
+            'symbol': symbol,
+            'price': price,
+            'marketCap': marketCap,
+            'eps': eps,
+            'revenue': revenue,
+            'earnings': earnings,
+            'pe': pe,
+            'sector': sector,
+            'industry': industry,
+            'perfMonth': perfMonth,
+            'perfQuarter': perfQuarter,
+            'pct1w': pct1w, 'minPct1w': minPct1w, 'maxPct1w': maxPct1w,
+            'pct2w': pct2w, 'minPct2w': minPct2w, 'maxPct2w': maxPct2w,
+            'pct3w': pct3w, 'minPct3w': minPct3w, 'maxPct3w': maxPct3w,
+            'pct1m': pct1m, 'minPct1m': minPct1m, 'maxPct1m': maxPct1m,
+            'pct2m': pct2m, 'minPct2m': minPct2m, 'maxPct2m': maxPct2m,
+            'pct3m': pct3m, 'minPct3m': minPct3m, 'maxPct3m': maxPct3m,
+            'pct6m': pct6m, 'minPct6m': minPct6m, 'maxPct6m': maxPct6m,
+            'pct1y': pct1y, 'minPct1y': minPct1y, 'maxPct1y': maxPct1y,
+            'pct1wSPY': pct1wSPY,
+            'pct1mSPY': pct1mSPY,
+            'pct3mSPY': pct1mSPY,
+            'pct1ySPY': pct1ySPY
+        }
+        patternStats.update({"patternId": patternId, "date": date, "symbol": symbol}, {"$set": data}, upsert=True)
+        pass
 
     pass
