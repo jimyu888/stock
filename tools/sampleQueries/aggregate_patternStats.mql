@@ -1,1 +1,31 @@
-db.patternStats.aggregate([        {           "$match": {              "$and": [                 {                    "symbol": {                       "$ne":'GOOG', "$ne":'BRK-B', "$ne":'RDS-B', "$ne":'PBR-A'                    }                 },                 {                     "industry": { "$ne":'Exchange Traded Fund' }                 }              ]           }        },        {           "$group": {              "_id": "$symbol",              "count": { "$sum":1 },           }        },        {           "$sort": {              "count": -1           }        }     ])
+db.patternStats.aggregate([
+        {
+           "$match": {
+              "$and": [
+                 {
+                    "symbol": {
+                       "$ne":'GOOG', "$ne":'BRK-B', "$ne":'RDS-B', "$ne":'PBR-A'
+                    }
+                 },
+                 {
+                     "industry": { "$ne":'Exchange Traded Fund' }
+                 }
+              ]
+           }
+        },
+        {
+           "$group": {
+              "_id": "$symbol",
+              "count": { "$sum":1 },
+	      "pct1m": { "$avg":"$pct1m" },
+	      "pct3m": { "$avg":"$pct3m" },
+	      "pct1mSPY": { "$avg":"$pct1mSPY" },
+	      "pct3mSPY": { "$avg":"$pct3mSPY" },
+           }
+        },
+        {
+           "$sort": {
+              "count": -1
+           }
+        }
+     ])
