@@ -4,14 +4,14 @@ Eps increase
 2014-04-08 ~ 2019-11-29 marketCap>$10M, 2019 only has data since 2019-11-18
 6881 symbols, 74131 times
 
-Year	Count	1w 	1m 	3m 	SPY 1w 	SPY 1m 	SPY 3m 
-All	74131	0.93%	2.47%	 5.09%	 0.16%	 0.64%	 1.57%		BEAT, BETTER THAN pattern4
-2014	10100	0.28%	1.00%	 1.79%	 0.54%	 1.64%	 3.06%		LOSE
-2015	15082	1.39%	1.34%	-0.10%	-0.22%	-0.84%	-1.72%		BEAT
-2016	15043	1.42%	5.43%	15.01% 	 0.30%	 1.77%	 4.42%		BEAT BIG, BETTER THAN pattern4
-2017	15350	0.39%	2.15%	 6.83%	 0.23%	 1.48% 	 4.01%		BEAT
-2018	15757	0.54%	1.59%	 1.09%	 0.03%	-0.46%	-1.17%		BEAT
-2019	2799	3.41%	4.58% 	 4.58%	 0.42%	 0.68%	 0.68%		BEAT BIG, BETTER THAN pattern4
+Year	Count	1w 	1m 	3m 	SPY 1w 	SPY 1m	SPY 3m 	     1w dif   1m diff	3m diff
+All     74131   0.93%   2.47%   5.09%   0.16%    0.64%   1.57%        0.77%    1.83%    3.52%        BEAT, BETTER THAN pattern4
+2014    10100   0.28%   1.00%   1.79%   0.54%    1.64%   3.06%       -0.26%   -0.64%   -1.27%        LOSE
+2015    15082   1.39%   1.34%  -0.10%  -0.22%   -0.84%  -1.72%        1.61%    2.18%    1.62%        BEAT
+2016    15043   1.42%   5.43%  15.01%   0.30%    1.77%   4.42%        1.12%    3.66%   10.59%        BEAT BIG, BETTER THAN pattern4
+2017    15350   0.39%   2.15%   6.83%   0.23%    1.48%   4.01%        0.16%    0.67%    2.82%        BEAT
+2018    15757   0.54%   1.59%   1.09%   0.03%   -0.46%  -1.17%        0.51%    2.05%    2.26%        BEAT
+2019    2799    3.41%   4.58%   4.58%   0.42%    0.68%   0.68%        2.99%    3.90%    3.90%        BEAT BIG, BETTER THAN pattern4
 ```
 
 # pattern2.py
@@ -195,6 +195,7 @@ Year    Count   1w      1m      3m      SPY 1w  SPY 1m  SPY 3m          1w diff 
 ```
 Small cap stocks(<$10B):
 ```
+Year    Count   1w      1m      3m      SPY 1w  SPY 1m  SPY 3m          1w diff 1m diff 3m diff
 2014	4213	0.53%	0.97%	1.22%	0.58%	1.68%	3.05%		-0.05%	-0.71%	-1.83%	LOSE
 2015	5821	3.81%	3.14%	0.76%	-0.29%	-1.03%	-1.80%		4.10%	4.17%	2.56%	BEAT
 2016	5673	1.32%	4.97%	13.87%	0.36%	1.85%	4.43%		0.96%	3.12%	9.44%	BEAT BIG
@@ -204,14 +205,25 @@ Small cap stocks(<$10B):
 											
 									1.20%	1.96%	3.32%	BEAT
 ```
-The following query can get stats by month and an industry's stats by month:
+Note: The following query can get stats by month and an industry's stats by month:
 ```
 ./query.py ./sampleQueries/aggregate_patternStats_byMonth.mql
 ./query.py ./sampleQueries/aggregate_patternStats_industryByMonth.mql
 ```
 
-# pattern5.py (TODO)
+# pattern5.py
 Eps decrease
+```
+Year    Count   1w      1m      3m      SPY 1w  SPY 1m  SPY 3m      1w diff  1m diff  3m diff
+2014     9029    0.16%  0.31%   0.62%    0.36%  1.28%   2.95%       -0.20%   -0.97%   -2.33%
+2015    14999   -0.20% -0.29%  -3.26%   -0.25% -0.90%  -1.92%        0.05%    0.61%   -1.34%
+2016    14207    0.94%  4.26%   9.75%    0.30%  1.73%   4.44%        0.64%    2.53%    5.31%
+2017    12303    0.23%  1.95%   4.52%    0.18%  1.51%   3.99%        0.05%    0.44%    0.53%
+2018    12076    0.15%  0.43%   0.44%   -0.03% -0.47%  -0.78%        0.18%    0.90%    1.22%
+2019     2613    2.20%  2.87%   2.87%    0.41%  0.68%   0.68%        1.79%    2.19%    2.19%
+                                            
+        65227    0.58%  1.59%   2.49%    0.16%  0.64%   1.56%        0.42%    0.95%    0.93%
+```
 
 # pattern6.py (TODO)
 Revenue decrease
