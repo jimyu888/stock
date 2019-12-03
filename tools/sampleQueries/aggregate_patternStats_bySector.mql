@@ -2,16 +2,15 @@ db.patternStats.aggregate([
         {
            "$match": {
               "$and": [
-		 { "patternId": 4 },
-		 { "date": {"$gte": '2014-04-08'} },
+		 { "patternId": 2 },
+		 { "date": {"$gte": '2019-01-01'} },
 		 { "date": {"$lte": '2019-12-31'} },
-		 { "marketCap": {"$lte": 10000} },
               ]
            }
         },
         {
            "$group": {
-              "_id": { "$substr": ["$date", 0, 4] },
+              "_id": "$sector",
               "count": { "$sum":1 },
 	      "pct1w": { "$avg":"$pct1w" },
 	      "pct1m": { "$avg":"$pct1m" },
@@ -23,7 +22,7 @@ db.patternStats.aggregate([
         },
         {
            "$sort": {
-              "_id": 1
+              "count": -1
            }
         }
      ])
