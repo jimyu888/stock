@@ -98,13 +98,13 @@ class StockLib:
             if result[i]['eps']!='\\N' and result[i-1]['eps']!='\\N' and self.getDaysDiff(result[i-1]['date'], result[i]['date'])<=3:
                 self.calcRevenue(result[i])
                 self.calcEarnings(result[i])
-                if epsIncrease and result[i]['eps']>result[i-1]['eps']:
+                if epsIncrease and result[i]['eps']>result[i-1]['eps']:		# eps increase case
                     data.append(result[i])
-                elif not epsIncrease and result[i]['eps']<result[i-1]['eps']:
+                elif not epsIncrease and result[i]['eps']<result[i-1]['eps']:	# eps decrease case
                     data.append(result[i])
         return data
 
-    def getRevenueIncrease(self, db, symbol, startDateStr, endDateStr):
+    def getRevenueIncrease(self, db, symbol, startDateStr, endDateStr, revenueIncrease=True):
         finvizDaily = db['finvizDaily']
         query = {
             'symbol': symbol,
@@ -124,9 +124,11 @@ class StockLib:
                 revenueChange = (currentRevenue - previousRevenue)/previousRevenue
                 if result[i]['eps']=='\\N':
                     result[i]['eps'] = 0
-                if revenueChange>0.01:
-                    self.calcRevenue(result[i])
-                    self.calcEarnings(result[i])
+                self.calcRevenue(result[i])
+                self.calcEarnings(result[i])
+                if revenueIncrease and revenueChange>0.01:		# revenue increase case
+                    data.append(result[i])
+                elif not revenueIncrease and revenueChange<-0.01:	# revenue decrease case
                     data.append(result[i])
         return data
 
