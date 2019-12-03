@@ -6,6 +6,9 @@ import re
 
 class StockLib:
 
+    def getDaysDiff(self, date1, date2):
+        return (datetime.strptime(date2, '%Y-%m-%d') - datetime.strptime(date2, '%Y-%m-%d')).days
+
     def getReturn(self, db, symbol, dateStr, days):
         finvizDaily = db['finvizDaily']
         splitHistory = db['splitHistory']
@@ -40,37 +43,43 @@ class StockLib:
         resultEnd = list(cursor)[0]
         priceStart = resultStart['price']
         priceEnd = resultEnd['price'] * totalSplitRatio
-        pct = (priceEnd- priceStart) / priceStart
+        (pct, maxPct, minPct) = (0, 0, 0)
 
-        cursor = finvizDaily.find(queryAll).sort([('date',1)])
-        result = list(cursor)
-        minPrice = priceStart
-        maxPrice = priceStart
-        splitRatio = 1
-        splitRatioIndex = 0
-        for r in result:
-            if r['date']==resultStart['date']:
-                next
-            if len(resultSplitHistory)>0 and splitRatioIndex<len(resultSplitHistory) and r['date']==resultSplitHistory[splitRatioIndex]['date']:
-                splitRatio *= resultSplitHistory[splitRatioIndex]['ratio']
-                splitRatioIndex += 1
-            price = r['price'] * splitRatio
-            if price > maxPrice:
-                maxPrice = price
-            if price < minPrice:
-                minPrice = price
-        maxPct = (maxPrice - priceStart) / priceStart
-        minPct = (minPrice - priceStart) / priceStart
+        if type(priceStart)!=type('string') and priceStart>0 and type(priceEnd)!=type('string') and priceEnd>0:
+            pct = (priceEnd - priceStart) / priceStart
+            cursor = finvizDaily.find(queryAll).sort([('date',1)])
+            result = list(cursor)
+            minPrice = priceStart
+            maxPrice = priceStart
+            splitRatio = 1
+            splitRatioIndex = 0
+            for r in result:
+                if r['date']==resultStart['date']:
+                    next
+                if len(resultSplitHistory)>0 and splitRatioIndex<len(resultSplitHistory) and r['date']==resultSplitHistory[splitRatioIndex]['date']:
+                    splitRatio *= resultSplitHistory[splitRatioIndex]['ratio']
+                    splitRatioIndex += 1
+                price = r['price'] * splitRatio
+                if type(price)!=type('string') and price > maxPrice:
+                    maxPrice = price
+                if type(price)!=type('string') and price < minPrice:
+                    minPrice = price
+            maxPct = (maxPrice - priceStart) / priceStart
+            minPct = (minPrice - priceStart) / priceStart
 
         return (pct, minPct, maxPct)
 
     def calcRevenue(self, data):
-        if 'marketCap' in data and data['marketCap'] and data['marketCap']!='\N' and 'ps' in data and data['ps'] and data['ps']!='\N':
+        if 'marketCap' in data and data['marketCap'] and data['marketCap']!='\\N' and 'ps' in data and data['ps'] and data['ps']!='\\N':
             data['revenue'] = data['marketCap'] / data['ps']
+        else:
+            data['revenue'] = 0
 
     def calcEarnings(self, data):
-        if 'outstandingShares' in data and data['outstandingShares'] and data['outstandingShares']!='\N' and 'eps' in data and data['eps'] and data['eps']!='\N':
+        if 'outstandingShares' in data and data['outstandingShares'] and data['outstandingShares']!='\\N' and 'eps' in data and data['eps'] and data['eps']!='\\N':
             data['earnings'] = data['outstandingShares'] * data['eps']
+        else:
+            data['earnings'] = 0
 
     def getEpsIncrease(self, db, symbol, startDateStr, endDateStr):
         finvizDaily = db['finvizDaily']
@@ -86,7 +95,7 @@ class StockLib:
         result = list(cursor)
         data = []
         for i in range(1,len(result)):
-            if result[i]['eps']!='\N' and result[i-1]['eps']!='\N' and result[i]['eps']>result[i-1]['eps']:
+            if result[i]['eps']!='\\N' and result[i-1]['eps']!='\\N' and result[i]['eps']>result[i-1]['eps'] and self.getDaysDiff(result[i-1]['date'], result[i]['date'])<=3:
                 self.calcRevenue(result[i])
                 self.calcEarnings(result[i])
                 data.append(result[i])
@@ -106,10 +115,12 @@ class StockLib:
         result = list(cursor)
         data = []
         for i in range(1,len(result)):
-            if result[i]['ps']!='\N' and result[i-1]['ps']!='\N' and result[i]['marketCap']!='\N' and result[i-1]['marketCap']!='\N':
+            if result[i]['ps']!='\\N' and result[i-1]['ps']!='\\N' and result[i-1]['ps'] and result[i]['ps'] and result[i]['marketCap']!='\\N' and result[i-1]['marketCap']!='\\N' and self.getDaysDiff(result[i-1]['date'], result[i]['date'])<=3:
                 previousRevenue = result[i-1]['marketCap'] / result[i-1]['ps']
                 currentRevenue = result[i]['marketCap'] / result[i]['ps']
                 revenueChange = (currentRevenue - previousRevenue)/previousRevenue
+                if result[i]['eps']=='\\N':
+                    result[i]['eps'] = 0
                 if revenueChange>0.01:
                     self.calcRevenue(result[i])
                     self.calcEarnings(result[i])
@@ -130,11 +141,12 @@ class StockLib:
         result = list(cursor)
         data = []
         for i in range(1,len(result)):
-            if result[i]['ps']!='\N' and result[i-1]['ps']!='\N' and result[i]['marketCap']!='\N' and result[i-1]['marketCap']!='\N' and result[i]['eps']!='\N' and result[i-1]['eps']!='\N':
+            if result[i]['ps']!='\\N' and result[i-1]['ps']!='\\N' and result[i-1]['ps'] and result[i]['ps'] and result[i]['marketCap']!='\\N' and result[i-1]['marketCap']!='\\N' and result[i]['eps']!='\\N' and result[i-1]['eps']!='\\N' and self.getDaysDiff(result[i-1]['date'], result[i]['date'])<=3:
                 previousRevenue = result[i-1]['marketCap'] / result[i-1]['ps']
                 currentRevenue = result[i]['marketCap'] / result[i]['ps']
                 revenueChange = (currentRevenue - previousRevenue)/previousRevenue
                 if revenueChange>0.01 and result[i]['eps']>result[i-1]['eps']:
+                    # print('%s previous revenue %8.02f current revenue %8.02f increase %6.02f%%; previous eps %6.02f current eps %6.02f increase %6.02f%%' % (result[i]['date'], previousRevenue, currentRevenue, (currentRevenue-previousRevenue)/previousRevenue*100.0, result[i-1]['eps'], result[i]['eps'], (result[i]['eps']-result[i-1]['eps'])/result[i-1]['eps']*100.0))
                     self.calcRevenue(result[i])
                     self.calcEarnings(result[i])
                     data.append(result[i])
@@ -154,7 +166,7 @@ class StockLib:
         result = list(cursor)
         data = []
         for i in range(1,len(result)):
-            if result[i]['ps']!='\N' and result[i-1]['ps']!='\N' and result[i]['marketCap']!='\N' and result[i-1]['marketCap']!='\N' and result[i]['eps']!='\N' and result[i-1]['eps']!='\N':
+            if result[i]['ps']!='\\N' and result[i-1]['ps']!='\\N' and result[i-1]['ps'] and result[i]['ps'] and result[i]['marketCap']!='\\N' and result[i-1]['marketCap']!='\\N' and result[i]['eps']!='\\N' and result[i-1]['eps']!='\\N' and self.getDaysDiff(result[i-1]['date'], result[i]['date'])<=3:
                 previousRevenue = result[i-1]['marketCap'] / result[i-1]['ps']
                 currentRevenue = result[i]['marketCap'] / result[i]['ps']
                 revenueChange = (currentRevenue - previousRevenue)/previousRevenue
@@ -180,7 +192,8 @@ class StockLib:
         }
         cursor = finvizDaily.distinct('symbol', query)
         result = list(cursor)
-	return result
+        result.sort()
+        return result
 
     def savePatternStats(self, db, patternId, \
             date, symbol, \
@@ -223,7 +236,7 @@ class StockLib:
             'pct1y': pct1y, 'minPct1y': minPct1y, 'maxPct1y': maxPct1y,
             'pct1wSPY': pct1wSPY,
             'pct1mSPY': pct1mSPY,
-            'pct3mSPY': pct1mSPY,
+            'pct3mSPY': pct3mSPY,
             'pct1ySPY': pct1ySPY
         }
         patternStats.update({"patternId": patternId, "date": date, "symbol": symbol}, {"$set": data}, upsert=True)

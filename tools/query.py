@@ -40,7 +40,7 @@ def parseMongoQuery(queryStr):
         parts = queryStr.split('.limit')
         if len(parts)>1:
             query = parts[0]
-	    limit = parts[1]
+            limit = parts[1]
             limit = limit[1:len(limit)-1]
 
     return (query, sort, limit)
@@ -53,26 +53,26 @@ def parseMongoQuery(queryStr):
 def getSortParams(sortStr):
     sortParamsArray = []
     if sortStr == '{}':
-	return sortParamsArray
+        return sortParamsArray
     sortStr = sortStr[1:len(sortStr)-1]
     parts = sortStr.split(',')
     for p in parts:
-	params = p.split(':')
-	key = params[0].strip()
-	key = key[1:len(key)-1]
-	value = params[1].strip()
-	value = int(value)
-	sortParamsArray.append((key, value))
+        params = p.split(':')
+        key = params[0].strip()
+        key = key[1:len(key)-1]
+        value = params[1].strip()
+        value = int(value)
+        sortParamsArray.append((key, value))
     return sortParamsArray
 
 client = pymongo.MongoClient("mongodb://mongodb_host:27017/")
 db = client['stock']
 
 if len(sys.argv)<2:
-    print '''
+    print('''
     Usage:
         python query.py <mongo query file>
-    '''
+    ''')
     sys.exit()
 
 filename = sys.argv[1]
@@ -105,7 +105,7 @@ if matches:
         output = {}
         if len(params)>1:
             output = params[1]
-	if len(sortParams)>0 and limitParam:
+        if len(sortParams)>0 and limitParam:
             cursor = collection.find(cond, output).sort(sortParams).limit(limitParam)
         elif len(sortParams)>0:
             cursor = collection.find(cond, output).sort(sortParams)
@@ -150,10 +150,10 @@ if matches:
     for x in result:
         data = []
         for k in columns:
-	    value = x[k]
-	    # do not output \N, make it blank
-	    if value == '\\N':
-		value = ''
+            value = x[k]
+            # do not output \N, make it blank
+            if value == '\\N':
+                value = ''
             data.append(value)
         print(fmtData % tuple(data))
 

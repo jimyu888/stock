@@ -9,11 +9,14 @@ db = client['stock']
 stockLib = StockLib.StockLib()
 
 startDate = '2014-01-01'
-endDate = '2019-01-01'
+endDate = '2020-01-01'
 
 symbols = stockLib.getStockSymbols(db, startDate, endDate, 10)
 for i in range(len(symbols)):
+    if i<0:
+        continue
     symbol = symbols[i]
+    print('Processing ' + symbol)
 
     data = stockLib.getRevenueOrEpsIncrease(db, symbol, startDate, endDate)
     totalReturn = 0
@@ -26,7 +29,7 @@ for i in range(len(symbols)):
         (pct3m, minPct3m, maxPct3m) = stockLib.getReturn(db, d['symbol'], d['date'], 92)
         (pct6m, minPct6m, maxPct6m) = stockLib.getReturn(db, d['symbol'], d['date'], 183)
         (pct1y, minPct1y, maxPct1y) = stockLib.getReturn(db, d['symbol'], d['date'], 365)
-        print('Date=%s\teps=%6.02f\trevenue=%8.02f\tearnings=%8.02f\tPct1w = %6.02f%%\tMin Pct1w = %6.02f%%\tMax Pct1w = %6.02f%%' % (d['date'], d['eps'], d['revenue'], d['earnings'], pct1w*100, minPct1w*100, maxPct1w*100))
+        print('%d %-8s Date=%s\teps=%6.02f\trevenue=%8.02f\tearnings=%8.02f\tPct1w = %6.02f%%\tMin Pct1w = %6.02f%%\tMax Pct1w = %6.02f%%' % (i, symbol, d['date'], d['eps'], d['revenue'], d['earnings'], pct1w*100, minPct1w*100, maxPct1w*100))
         totalReturn += pct1w
         # save to patternStats
         stockLib.savePatternStats(db, 3, d['date'], symbol, \
@@ -40,7 +43,8 @@ for i in range(len(symbols)):
             pct3m, minPct3m, maxPct3m, \
             pct6m, minPct6m, maxPct6m, \
             pct1y, minPct1y, maxPct1y)
-    totalReturn /= len(data)
+    if len(data):
+        totalReturn /= len(data)
     print('Average return for %s revenue or eps increase between %s and %s: %6.02f%% (%d)\n' % (symbol, startDate, endDate, totalReturn*100, len(data)))
 
     print('')

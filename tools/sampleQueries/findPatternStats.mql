@@ -1,4 +1,4 @@
 db.patternStats.find(
-	{},
-	{"date": 1, "symbol": 1, "price": 1, "marketCap": 1, "pe": 1, "_id": 0, "pct1w":1, "pct1m":1, "pct1y":1, "pct1wSPY":1, "pct1mSPY":1, "pct1ySPY":1, "perfMonth": 1, "perfQuarter":1}
+	{"symbol" :"SSL", "patternId":4},
+	{"patternId":1, "date": 1, "symbol": 1, "price": 1, "marketCap": 1, "pe": 1, "_id": 0, "pct1w":1, "pct1m":1, "pct1y":1, "pct1wSPY":1, "pct1mSPY":1, "pct1ySPY":1, "perfMonth": 1, "perfQuarter":1}
 ).sort({"date": 1, "symbol": 1, "pct1w":-1})

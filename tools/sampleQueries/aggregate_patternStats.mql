@@ -7,6 +7,8 @@ db.patternStats.aggregate([
                        "$ne":'GOOG', "$ne":'BRK-B', "$ne":'RDS-B', "$ne":'PBR-A'
                     }
                  },
+		 { "patternId": 4 },
+		 { "symbol": {'$eq': 'SSL'} },
                  {
                      "industry": { "$ne":'Exchange Traded Fund' }
                  }
