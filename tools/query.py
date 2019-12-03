@@ -141,7 +141,10 @@ if matches:
     fmtData = ''
     for k in columns:
         fmtHeader += '%-' + str(maxLength[k]) + 's' + '    '
-        fmtData += '%' + align[k] + str(maxLength[k]) + 's' + '    '
+	if k[0:3]=='pct':
+		fmtData += '%' + align[k] + str(maxLength[k]) + '.02f' + '%%   '
+	else:
+		fmtData += '%' + align[k] + str(maxLength[k]) + 's' + '    '
 
     # print header
     print(fmtHeader % tuple(columns))
@@ -154,6 +157,8 @@ if matches:
             # do not output \N, make it blank
             if value == '\\N':
                 value = ''
+            elif k[0:3]=='pct':
+                value *= 100.0
             data.append(value)
         print(fmtData % tuple(data))
 
