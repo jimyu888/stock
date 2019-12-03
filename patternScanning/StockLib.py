@@ -81,7 +81,7 @@ class StockLib:
         else:
             data['earnings'] = 0
 
-    def getEpsIncrease(self, db, symbol, startDateStr, endDateStr):
+    def getEpsIncrease(self, db, symbol, startDateStr, endDateStr, epsIncrease=True):
         finvizDaily = db['finvizDaily']
         query = {
             'symbol': symbol,
@@ -95,10 +95,13 @@ class StockLib:
         result = list(cursor)
         data = []
         for i in range(1,len(result)):
-            if result[i]['eps']!='\\N' and result[i-1]['eps']!='\\N' and result[i]['eps']>result[i-1]['eps'] and self.getDaysDiff(result[i-1]['date'], result[i]['date'])<=3:
+            if result[i]['eps']!='\\N' and result[i-1]['eps']!='\\N' and self.getDaysDiff(result[i-1]['date'], result[i]['date'])<=3:
                 self.calcRevenue(result[i])
                 self.calcEarnings(result[i])
-                data.append(result[i])
+                if epsIncrease and result[i]['eps']>result[i-1]['eps']:
+                    data.append(result[i])
+                elif not epsIncrease and result[i]['eps']<result[i-1]['eps']:
+                    data.append(result[i])
         return data
 
     def getRevenueIncrease(self, db, symbol, startDateStr, endDateStr):
