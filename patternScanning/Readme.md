@@ -221,3 +221,6 @@ Revenue or eps decrease
 
 # pattern8.py (TODO)
 Revenue and eps decrease
+
+# TODO
+https://www.investopedia.com/articles/active-trading/092315/5-most-powerful-candlestick-patterns.asp
