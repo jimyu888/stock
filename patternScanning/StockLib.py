@@ -81,7 +81,7 @@ class StockLib:
         else:
             data['earnings'] = 0
 
-    def getEpsIncrease(self, db, symbol, startDateStr, endDateStr, epsIncrease=True):
+    def getEpsIncrease(self, db, symbol, startDateStr, endDateStr, increase=True):
         finvizDaily = db['finvizDaily']
         query = {
             'symbol': symbol,
@@ -98,13 +98,13 @@ class StockLib:
             if result[i]['eps']!='\\N' and result[i-1]['eps']!='\\N' and self.getDaysDiff(result[i-1]['date'], result[i]['date'])<=3:
                 self.calcRevenue(result[i])
                 self.calcEarnings(result[i])
-                if epsIncrease and result[i]['eps']>result[i-1]['eps']:		# eps increase case
+                if increase and result[i]['eps']>result[i-1]['eps']:		# eps increase case
                     data.append(result[i])
-                elif not epsIncrease and result[i]['eps']<result[i-1]['eps']:	# eps decrease case
+                elif not increase and result[i]['eps']<result[i-1]['eps']:	# eps decrease case
                     data.append(result[i])
         return data
 
-    def getRevenueIncrease(self, db, symbol, startDateStr, endDateStr, revenueIncrease=True):
+    def getRevenueIncrease(self, db, symbol, startDateStr, endDateStr, increase=True):
         finvizDaily = db['finvizDaily']
         query = {
             'symbol': symbol,
@@ -126,13 +126,13 @@ class StockLib:
                     result[i]['eps'] = 0
                 self.calcRevenue(result[i])
                 self.calcEarnings(result[i])
-                if revenueIncrease and revenueChange>0.01:		# revenue increase case
+                if increase and revenueChange>0.01:		# revenue increase case
                     data.append(result[i])
-                elif not revenueIncrease and revenueChange<-0.01:	# revenue decrease case
+                elif not increase and revenueChange<-0.01:	# revenue decrease case
                     data.append(result[i])
         return data
 
-    def getRevenueAndEpsIncrease(self, db, symbol, startDateStr, endDateStr):
+    def getRevenueAndEpsIncrease(self, db, symbol, startDateStr, endDateStr, increase=True):
         finvizDaily = db['finvizDaily']
         query = {
             'symbol': symbol,
@@ -150,14 +150,16 @@ class StockLib:
                 previousRevenue = result[i-1]['marketCap'] / result[i-1]['ps']
                 currentRevenue = result[i]['marketCap'] / result[i]['ps']
                 revenueChange = (currentRevenue - previousRevenue)/previousRevenue
-                if revenueChange>0.01 and result[i]['eps']>result[i-1]['eps']:
+                self.calcRevenue(result[i])
+                self.calcEarnings(result[i])
+                if increase and revenueChange>0.01 and result[i]['eps']>result[i-1]['eps']:
                     # print('%s previous revenue %8.02f current revenue %8.02f increase %6.02f%%; previous eps %6.02f current eps %6.02f increase %6.02f%%' % (result[i]['date'], previousRevenue, currentRevenue, (currentRevenue-previousRevenue)/previousRevenue*100.0, result[i-1]['eps'], result[i]['eps'], (result[i]['eps']-result[i-1]['eps'])/result[i-1]['eps']*100.0))
-                    self.calcRevenue(result[i])
-                    self.calcEarnings(result[i])
+                    data.append(result[i])
+                elif not increase and revenueChange<-0.01 and result[i]['eps']<result[i-1]['eps']:
                     data.append(result[i])
         return data
 
-    def getRevenueOrEpsIncrease(self, db, symbol, startDateStr, endDateStr):
+    def getRevenueOrEpsIncrease(self, db, symbol, startDateStr, endDateStr, increase=True):
         finvizDaily = db['finvizDaily']
         query = {
             'symbol': symbol,
@@ -175,9 +177,11 @@ class StockLib:
                 previousRevenue = result[i-1]['marketCap'] / result[i-1]['ps']
                 currentRevenue = result[i]['marketCap'] / result[i]['ps']
                 revenueChange = (currentRevenue - previousRevenue)/previousRevenue
-                if (revenueChange>0.01 and result[i]['eps']>result[i-1]['eps']) or (abs(revenueChange)<0.005 and result[i]['eps']>result[i-1]['eps']) or (revenueChange>0.01 and result[i]['eps']==result[i-1]['eps']):
-                    self.calcRevenue(result[i])
-                    self.calcEarnings(result[i])
+                self.calcRevenue(result[i])
+                self.calcEarnings(result[i])
+                if increase and ((revenueChange>0.01 and result[i]['eps']>result[i-1]['eps']) or (abs(revenueChange)<0.005 and result[i]['eps']>result[i-1]['eps']) or (revenueChange>0.01 and result[i]['eps']==result[i-1]['eps'])):
+                    data.append(result[i])
+                elif not increase and ((revenueChange<-0.01 and result[i]['eps']<result[i-1]['eps']) or (abs(revenueChange)<0.005 and result[i]['eps']<result[i-1]['eps']) or (revenueChange<-0.01 and result[i]['eps']==result[i-1]['eps'])):
                     data.append(result[i])
         return data
 
