@@ -1,6 +1,5 @@
 # pattern1.py
 Eps increase
-
 ```
 2014-04-08 ~ 2019-11-29 marketCap>$10M, 2019 only has data since 2019-11-18
 6881 symbols, 74131 times
@@ -17,13 +16,24 @@ All		74131	0.93%		2.47%		 5.09%		 0.16%		 0.64%		 1.57%		BEAT, BETTER THAN patte
 
 # pattern2.py
 Revenue increase
+```
+2014-04-08 ~ 2019-11-29 marketCap>$10M, 2019 only has data since 2019-11-18
+xxx symbols, xxx times
+
+Timeframe	Count	1w return	1m return	3m return	SPY 1w rtn	SPY 1m rtn	SPY 3m rtn
+```
 
 # pattern3.py
 Revenue or eps increase
+```
+2014-04-08 ~ 2019-11-29 marketCap>$10M, 2019 only has data since 2019-11-18
+xxx symbols, xxx times
+
+Timeframe	Count	1w return	1m return	3m return	SPY 1w rtn	SPY 1m rtn	SPY 3m rtn
+```
 
 # pattern4.py
 Revenue and eps increase
-
 ```
 2014-04-08 ~ 2019-11-29 marketCap>$10M, 2019 only has data since 2019-11-18
 5785 symbols, 38300 times
@@ -36,4 +46,8 @@ All		38300	1.08%		2.19%		 4.07%		 0.19%		 0.71%		 1.46%		BEAT
 2017		8078	0.03%		1.52%		 7.26%		 0.19%		 1.46%		 4.10%		BEAT
 2018		8670	0.62%		1.56%		 0.42%		 0.11%		-0.22%		-1.63%		BEAT
 2019		1755	1.82%		2.95%		 2.95%		 0.42%		 0.70%		 0.70%		BEAT
+```
+The following query can get stats by month:
+```
+./query.py ./sampleQueries/aggregate_patternStats_byMonth.mql
 ```

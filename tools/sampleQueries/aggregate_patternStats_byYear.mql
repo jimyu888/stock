@@ -2,15 +2,15 @@ db.patternStats.aggregate([
         {
            "$match": {
               "$and": [
-		 { "patternId": 4 },
+		 { "patternId": 2 },
 		 { "date": {"$gte": '2014-04-08'} },
-		 { "date": {"$lte": '2014-12-31'} },
+		 { "date": {"$lte": '2019-12-31'} },
               ]
            }
         },
         {
            "$group": {
-              "_id": "$patternId",
+              "_id": { "$substr": ["$date", 0, 4] },
               "count": { "$sum":1 },
 	      "pct1w": { "$avg":"$pct1w" },
 	      "pct1m": { "$avg":"$pct1m" },
@@ -22,7 +22,7 @@ db.patternStats.aggregate([
         },
         {
            "$sort": {
-              "count": -1
+              "_id": 1
            }
         }
      ])
