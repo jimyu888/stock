@@ -11,14 +11,14 @@ stockLib = StockLib.StockLib()
 startDate = '2014-04-08'
 endDate = '2019-12-31'
 
-symbols = stockLib.getStockSymbols(db, startDate, endDate, 10, increase=False)
+symbols = stockLib.getStockSymbols(db, startDate, endDate, 10)
 for i in range(len(symbols)):
     symbol = symbols[i]
     if i<0:
         continue
 
     print('Processing ' + symbol)
-    data = stockLib.getRevenueAndEpsIncrease(db, symbol, startDate, endDate)
+    data = stockLib.getRevenueAndEpsIncrease(db, symbol, startDate, endDate, increase=False)
     totalReturn = 0
     for d in data:
         (pct1w, minPct1w, maxPct1w) = stockLib.getReturn(db, d['symbol'], d['date'], 7)
