@@ -209,3 +209,15 @@ The following query can get stats by month and an industry's stats by month:
 ./query.py ./sampleQueries/aggregate_patternStats_byMonth.mql
 ./query.py ./sampleQueries/aggregate_patternStats_industryByMonth.mql
 ```
+
+# pattern5.py (TODO)
+Eps decrease
+
+# pattern6.py (TODO)
+Revenue decrease
+
+# pattern7.py (TODO)
+Revenue or eps decrease
+
+# pattern8.py (TODO)
+Revenue and eps decrease
