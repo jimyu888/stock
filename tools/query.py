@@ -15,6 +15,7 @@ import pymongo
 import re
 import sys
 import time
+from collections import OrderedDict
 
 '''
     Parse mongo query string, split it to three parts
@@ -65,6 +66,15 @@ def getSortParams(sortStr):
         sortParamsArray.append((key, value))
     return sortParamsArray
 
+def getGroupColumns(params):
+    columns = []
+    print(params)
+    if len(params)>0 and '$group' in params[1]:
+        groups = params[1]['$group']
+        for g in groups:
+            columns.append(g)
+    return columns
+
 client = pymongo.MongoClient("mongodb://mongodb_host:27017/")
 db = client['stock']
 
@@ -96,8 +106,11 @@ if matches:
 
     # get collection and run the query
     collection = db[collectionName]
+    groupColumns = []
     if action=='aggregate':
+        # print(matches.groups()[2])
         params = ast.literal_eval(matches.groups()[2])
+        # groupColumns = getGroupColumns(params)
         cursor = collection.aggregate(params)
     elif action=='find':
         params = ast.literal_eval('[' + matches.groups()[2] + ']')
@@ -122,7 +135,10 @@ if matches:
     align = {}
 
     # get columns
-    if result[0]:
+    if len(groupColumns)>0:
+        columns = groupColumns
+        print(columns)
+    elif result[0]:
         columns = result[0].keys()
 
     # figure out each column's max length
@@ -141,10 +157,10 @@ if matches:
     fmtData = ''
     for k in columns:
         fmtHeader += '%-' + str(maxLength[k]) + 's' + '    '
-	if k[0:3]=='pct':
-		fmtData += '%' + align[k] + str(maxLength[k]) + '.02f' + '%%   '
-	else:
-		fmtData += '%' + align[k] + str(maxLength[k]) + 's' + '    '
+        if k[0:3]=='pct':
+            fmtData += '%' + align[k] + str(maxLength[k]) + '.02f' + '%%   '
+        else:
+            fmtData += '%' + align[k] + str(maxLength[k]) + 's' + '    '
 
     # print header
     print(fmtHeader % tuple(columns))
