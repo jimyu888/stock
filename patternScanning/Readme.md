@@ -1,5 +1,12 @@
 # pattern1.py
 Eps increase
+1.1 eps>0
+1.2 eps<0
+1.3 marketCap>10B, by year
+1.4 marketCap<10B, by year
+1.5 by sector, by year
+1.6 by industry, by year
+1.7 month, by year
 ```
 2014-04-08 ~ 2019-11-29 marketCap>$10M, 2019 missing data between 2019-06-12 to 2019-11-14
 6881 symbols, 84765 occurances out of 6390312 (1.33%)
