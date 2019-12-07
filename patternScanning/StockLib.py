@@ -249,7 +249,8 @@ class StockLib:
                 if d['date'] in tnx:
                     rate = tnx[d['date']]
                 # print("%s %8.02f %8.02f %f" % (d['date'], d['price'], d['pct'], rate))
-                daily.append(d['pct']/100.0 - rate/100.0/252.0)
+                if d['pct']!='\\N' and rate!='\\N':
+                    daily.append(d['pct']/100.0 - rate/100.0/252.0)
             df['daily'] = daily
             sharpe = df['daily'].mean()/df['daily'].std()*np.sqrt(252)
 
@@ -270,7 +271,8 @@ class StockLib:
             df = pd.DataFrame()
             daily = []
             for d in data:
-                if d['date'] in irHash:
+                if d['pct']!='\\N' and d['date'] in irHash and irHash[d['date']]!='\\N':
+                    # print(d['pct'], irHash[d['date']])
                     daily.append(d['pct']/100.0 - irHash[d['date']]/100.0)
             df['daily'] = daily
             ir = (pct - pctIR) / df['daily'].std()

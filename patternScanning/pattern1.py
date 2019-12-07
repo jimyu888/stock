@@ -14,7 +14,7 @@ endDate = '2020-01-01'
 
 symbols = stockLib.getStockSymbols(db, startDate, endDate, 10)
 for i in range(len(symbols)):
-    if i<0:
+    if i<1163:
         continue
     symbol = symbols[i]
     print('Processing ' + symbol)
