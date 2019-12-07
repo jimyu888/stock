@@ -15,7 +15,6 @@ import pymongo
 import re
 import sys
 import time
-from collections import OrderedDict
 
 '''
     Parse mongo query string, split it to three parts
@@ -66,15 +65,6 @@ def getSortParams(sortStr):
         sortParamsArray.append((key, value))
     return sortParamsArray
 
-def getGroupColumns(params):
-    columns = []
-    print(params)
-    if len(params)>0 and '$group' in params[1]:
-        groups = params[1]['$group']
-        for g in groups:
-            columns.append(g)
-    return columns
-
 client = pymongo.MongoClient("mongodb://mongodb_host:27017/")
 db = client['stock']
 
@@ -106,11 +96,8 @@ if matches:
 
     # get collection and run the query
     collection = db[collectionName]
-    groupColumns = []
     if action=='aggregate':
-        # print(matches.groups()[2])
         params = ast.literal_eval(matches.groups()[2])
-        # groupColumns = getGroupColumns(params)
         cursor = collection.aggregate(params)
     elif action=='find':
         params = ast.literal_eval('[' + matches.groups()[2] + ']')
@@ -132,13 +119,11 @@ if matches:
 
     columns = []
     maxLength = {}
+    maxHeaderLength = {}
     align = {}
 
     # get columns
-    if len(groupColumns)>0:
-        columns = groupColumns
-        print(columns)
-    elif result[0]:
+    if result[0]:
         columns = result[0].keys()
 
     # figure out each column's max length
@@ -146,6 +131,7 @@ if matches:
         for k in columns:
             if k not in maxLength or len(str(x[k]))>maxLength[k]:
                 maxLength[k] = len(str(x[k]))
+                maxHeaderLength[k] = max(len(k),6)
             if k not in align:
                 if type(x[k])==type(1) or type(x[k])==type(0.1):
                     align[k] = ''
@@ -156,10 +142,14 @@ if matches:
     fmtHeader =  ''
     fmtData = ''
     for k in columns:
-        fmtHeader += '%-' + str(maxLength[k]) + 's' + '    '
         if k[0:3]=='pct':
-            fmtData += '%' + align[k] + str(maxLength[k]) + '.02f' + '%%   '
+            fmtHeader += '%-' + str(maxHeaderLength[k]) + 's' + '    '
+            fmtData += '%' + align[k] + str(maxHeaderLength[k]) + '.02f' + '%%   '
+        elif k[0:2]=='ir' or k[0:6]=='sharpe' or k[0:4]=='perf':
+            fmtHeader += '%-' + str(maxHeaderLength[k]) + 's' + '    '
+            fmtData += '%' + align[k] + str(maxHeaderLength[k]) + '.02f' + '    '
         else:
+            fmtHeader += '%-' + str(maxLength[k]) + 's' + '    '
             fmtData += '%' + align[k] + str(maxLength[k]) + 's' + '    '
 
     # print header
@@ -173,6 +163,8 @@ if matches:
             # do not output \N, make it blank
             if value == '\\N':
                 value = ''
+            elif value==None:
+                value = 0
             elif k[0:3]=='pct':
                 value *= 100.0
             data.append(value)
