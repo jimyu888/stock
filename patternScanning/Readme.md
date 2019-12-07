@@ -1,15 +1,21 @@
 # pattern1.py
 Eps increase
 ```
-1.1 eps>0
-1.2 eps<0
-1.3 by marketCap, by year
-	1.3.1 > 10B
-	1.3.2 < 10B
-1.4 
-1.5 by sector, by year
-1.6 by industry, by year
-1.7 month, by year
+1.1 by eps
+	1.1.1 eps > 0
+	1.1.2 eps < 0
+	Can further break down
+1.2 by marketCap, by year
+	1.2.1 > 10B
+		1.2.1.2019 ...
+	1.2.2 < 10B
+	Can further break down
+1.3 by sector, by year
+	1.3.2019.1	last digit is the sector id
+1.4 by industry, by year
+	1.4.2019.1	last digit is the industry id
+1.5 by year, month
+	1.5.2019.1	last digit is month
 ```
 
 # pattern2.py
