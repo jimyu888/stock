@@ -1,20 +1,22 @@
 #!/usr/bin/python
 
+from datetime import datetime, timedelta
 import pymongo
 import StockLib
-from datetime import datetime, timedelta
+import sys
 
 client = pymongo.MongoClient('mongodb://mongodb_host:27017/')
 db = client['stock']
 
 stockLib = StockLib.StockLib()
 
-startDate = '2014-01-01'
-endDate = '2020-01-01'
+startDate = sys.argv[1] if len(sys.argv)>=2 else '2014-01-01'
+endDate = sys.argv[2] if len(sys.argv)>=3 else '2020-01-01'
+limit = int(sys.argv[3]) if len(sys.argv)>=4 else 0
 
 symbols = stockLib.getStockSymbols(db, startDate, endDate, 10)
 for i in range(len(symbols)):
-    if i<1163:
+    if i<limit:
         continue
     symbol = symbols[i]
     print('Processing ' + symbol)

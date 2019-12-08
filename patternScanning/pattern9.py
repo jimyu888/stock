@@ -37,10 +37,11 @@ SELECT	s.sector, REPLACE(s.industry, '&amp;', '&') AS industry, count(*) as coun
 WHERE s.date = @date 
   AND d.symbol not in ('GOOG', 'BRK-B', 'RDS-B', 'PBR-A') 
   AND s.industry <> 'Exchange Traded Fund' 
+  AND s.marketCap > 10
 
 GROUP BY 1, 2 
+HAVING MarginImprovement > 10 and count>=3
 ORDER BY MarginImprovement DESC
-HAVING MarginImprovement > 10
 LIMIT 20; 
 
 '''
