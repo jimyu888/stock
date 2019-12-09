@@ -100,7 +100,9 @@ class StockLib:
         result = list(cursor)
         data = []
         for i in range(1,len(result)):
-            if result[i]['eps']!='\\N' and result[i-1]['eps']!='\\N' and self.getDaysDiff(result[i-1]['date'], result[i]['date'])<=3:
+            if  result[i]['eps']!='\\N' and result[i-1]['eps']!='\\N' and \
+                result[i]['eps']!=None and result[i-1]['eps']!=None and \
+                self.getDaysDiff(result[i-1]['date'], result[i]['date'])<=3:
                 self.calcRevenue(result[i])
                 self.calcEarnings(result[i])
                 if increase and result[i]['eps']>result[i-1]['eps']:		# eps increase case
