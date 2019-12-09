@@ -1,0 +1,13 @@
+db.finvizDaily.find(
+	{'$and': [
+		{"date": "2019-12-02"}, 
+		{"marketCap": {"$gte":10}},
+                {"symbol": {"$ne":"GOOG"}},
+                {"symbol": {"$ne":"BRK-B"}},
+                {"symbol": {"$ne":"RDS-B"}},
+                {"symbol": {"$ne":"PBR-A"}},
+                {"industry": { "$ne": "Exchange Traded Fund" }},
+	]},
+	{"symbol": 1, "_id": 0}
+).sort({"marketCap":-1})
+
