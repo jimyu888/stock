@@ -1,6 +1,6 @@
 db.finvizDaily.find(
 	{'$and': [
-		{"date": "2019-12-02"}, 
+		{"date": "2019-12-09"}, 
 		{"marketCap": {"$gte":10}},
                 {"symbol": {"$ne":"GOOG"}},
                 {"symbol": {"$ne":"BRK-B"}},
