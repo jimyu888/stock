@@ -153,7 +153,14 @@ class StockLib:
         result = list(cursor)
         data = []
         for i in range(1,len(result)):
-            if result[i]['ps']!='\\N' and result[i-1]['ps']!='\\N' and result[i-1]['ps'] and result[i]['ps'] and result[i]['marketCap']!='\\N' and result[i-1]['marketCap']!='\\N' and result[i]['eps']!='\\N' and result[i-1]['eps']!='\\N' and self.getDaysDiff(result[i-1]['date'], result[i]['date'])<=3:
+            if  result[i]['ps']!='\\N' and result[i-1]['ps']!='\\N' and \
+                result[i]['ps']!=None  and result[i-1]['ps']!=None  and \
+                result[i-1]['ps'] and result[i]['ps'] and \
+                result[i]['marketCap']!='\\N' and result[i-1]['marketCap']!='\\N' and \
+                result[i]['marketCap']!=None  and result[i-1]['marketCap']!=None  and \
+                result[i]['eps']!='\\N' and result[i-1]['eps']!='\\N' and \
+                result[i]['eps']!=None  and result[i-1]['eps']!=None  and \
+                self.getDaysDiff(result[i-1]['date'], result[i]['date'])<=3:
                 previousRevenue = result[i-1]['marketCap'] / result[i-1]['ps']
                 currentRevenue = result[i]['marketCap'] / result[i]['ps']
                 revenueChange = (currentRevenue - previousRevenue)/previousRevenue
