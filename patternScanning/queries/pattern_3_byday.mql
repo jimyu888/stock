@@ -2,7 +2,7 @@ db.patternStats.aggregate([
         {
            "$match": {
               "$and": [
-		 { "patternId": 1 },
+		 { "patternId": 3 },
 		 { "date": {"$gte": '2019-11-01'} },
 		 { "date": {"$lte": '2019-12-31'} },
               ]

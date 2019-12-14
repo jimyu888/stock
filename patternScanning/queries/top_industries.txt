@@ -1,0 +1,55 @@
++-------------------------------------------+----------+----------------+
+| industry                                  | count(*) | sum(marketCap) |
++-------------------------------------------+----------+----------------+
+| Internet Information Providers            |       60 |     2726263.36 |
+| Drug Manufacturers - Major                |       18 |     1816335.94 |
+| Money Center Banks                        |       32 |     1735814.32 |
+| Major Integrated Oil &amp; Gas            |       15 |     1651620.00 |
+| Property &amp; Casualty Insurance         |       73 |     1581223.67 |
+| Business Software &amp; Services          |       45 |     1376872.84 |
+| Electronic Equipment                      |       13 |     1336069.40 |
+| Application Software                      |      147 |     1270074.36 |
+| Credit Services                           |       58 |     1129462.29 |
+| Biotechnology                             |      568 |     1077141.95 |
+| Catalog &amp; Mail Order Houses           |       11 |      905886.31 |
+| Diversified Machinery                     |       70 |      893974.47 |
+| Personal Products                         |       26 |      840070.40 |
+| Electric Utilities                        |       51 |      821114.99 |
+| Specialty Retail, Other                   |       52 |      714974.83 |
+| Information Technology Services           |       61 |      712693.73 |
+| Aerospace/Defense Products &amp; Services |       35 |      666295.71 |
+| Semiconductor - Broad Line                |       21 |      665970.97 |
+| Telecom Services - Domestic               |       20 |      654185.65 |
+| Medical Appliances &amp; Equipment        |       89 |      623209.42 |
+| Discount, Variety Stores                  |       11 |      615422.24 |
+| Health Care Plans                         |       10 |      602468.18 |
+| Entertainment - Diversified               |       26 |      566918.42 |
+| Business Services                         |       72 |      541760.96 |
+| Beverages - Soft Drinks                   |       18 |      532059.32 |
+| Foreign Regional Banks                    |       24 |      524964.51 |
+| Communication Equipment                   |       78 |      520915.78 |
+| Asset Management                          |      233 |      508397.82 |
+| Foreign Money Center Banks                |       11 |      487952.70 |
+| Wireless Communications                   |       23 |      485807.89 |
+| Auto Manufacturers - Major                |       14 |      471437.32 |
+| Independent Oil &amp; Gas                 |       98 |      465917.19 |
+| Industrial Metals &amp; Minerals          |       56 |      447673.63 |
+| Medical Instruments &amp; Supplies        |       76 |      433811.84 |
+| Life Insurance                            |       25 |      408059.46 |
+| Investment Brokerage - National           |       21 |      407174.27 |
+| Specialty Chemicals                       |       60 |      400536.31 |
+| Semiconductor - Integrated Circuits       |       21 |      382842.92 |
+| Oil &amp; Gas Pipelines                   |       39 |      371272.70 |
+| Railroads                                 |       14 |      365170.77 |
+| CATV Systems                              |       17 |      338603.14 |
+| Home Improvement Stores                   |        5 |      328848.20 |
+| Medical Laboratories &amp; Research       |       54 |      328514.89 |
+| Semiconductor Equipment &amp; Materials   |       38 |      327609.30 |
+| Diversified Utilities                     |       27 |      317308.24 |
+| Restaurants                               |       48 |      316041.04 |
+| Cigarettes                                |        6 |      315089.12 |
+| Oil &amp; Gas Drilling &amp; Exploration  |       36 |      307594.57 |
+| REIT - Diversified                        |       55 |      290470.85 |
+| Beverages - Brewers                       |        8 |      249199.69 |
++-------------------------------------------+----------+----------------+
+50 rows in set (0.12 sec)

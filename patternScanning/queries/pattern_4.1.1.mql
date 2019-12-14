@@ -1,0 +1,38 @@
+db.patternStats.aggregate([
+        {
+           "$match": {
+              "$and": [
+		 { "patternId": 4 },
+		 { "date": {"$gte": '2014-04-08'} },
+		 { "date": {"$lte": '2019-12-31'} },
+		 { "eps": {"$gte": 0} },
+              ]
+           }
+        },
+        {
+           "$group": {
+              "_id": { "$substr": ["$date", 0, 4] },
+              "count": { "$sum":1 },
+              "perf1m": { "$avg":"$perfMonth" },
+              "perf3m": { "$avg":"$perfQuarter" },
+              "pct1w": { "$avg":"$pct1w" },
+              "pct1m": { "$avg":"$pct1m" },
+              "pct3m": { "$avg":"$pct3m" },
+              "pct1y": { "$avg":"$pct1y" },
+              "pct1wSPY": { "$avg":"$pct1wSPY" },
+              "pct1mSPY": { "$avg":"$pct1mSPY" },
+              "pct3mSPY": { "$avg":"$pct3mSPY" },
+              "pct1ySPY": { "$avg":"$pct1ySPY" },
+              "sharpe": { "$avg":"$sharpe" },
+              "sharpe3m": { "$avg":"$sharpe3m" },
+              "sharpe1y": { "$avg":"$sharpe1y" },
+              "ir3m": { "$avg":"$ir3m" },
+              "ir1y": { "$avg":"$ir1y" },
+           }
+        },
+        {
+           "$sort": {
+              "_id": 1
+           }
+        }
+     ])
