@@ -1,3 +1,3 @@
 # stock
-explore stock data
+explore stock data<br>
 example queries
