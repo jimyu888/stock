@@ -1,3 +1,8 @@
 # stock
-explore stock data<br>
-example queries
+
+----
+
+This project is to explore stock data to find insights and opportunities.
+
+----
+
