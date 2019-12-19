@@ -11,16 +11,17 @@ def saveMin1ToMongo(min1, data):
         min1.update({"symbol": d['symbol'], "date": d['date']}, {"$set": d}, upsert=True)
 
 ## MAIN ##
-if len(sys.argv)<2:
-    print('Usage: ./loadMin1.py <min 1 data file dir>')
+if len(sys.argv)<3:
+    print('Usage: ./loadMin1.py <symbol> <min 1 data file dir>')
     sys.exit(0)
-dir = sys.argv[1]
+symbol = sys.argv[1]
+dir = sys.argv[2]
 
 client = pymongo.MongoClient('mongodb://mongodb_host:27017/')
 db = client['stock']
 min1 = db['min1']
 
-files = [f for f in listdir(dir) if re.match(r'SPY_\d+.min1', f)]
+files = [f for f in listdir(dir) if re.match(symbol + '_\d+.min1', f)]
 for file in files:
     print('Processing %s ...' % (file))
     min1_data = []
