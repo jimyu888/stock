@@ -22,6 +22,17 @@ Load finviz daily data from MySQL database to MongoDB
 # With parameters: ./loadFinvizDaily.py [startDate] [endDate]
 ./loadFinvizDaily.py 2019-12-16 2019-12-18
 ```
+Note: after loading TNX and finviz daily data, run pattern scanning to update data, i.e.
+```
+./pattern1.py 2019-12-01
+./pattern2.py 2019-12-01
+./pattern3.py 2019-12-01
+./pattern4.py 2019-12-01
+./pattern5.py 2019-12-01
+./pattern6.py 2019-12-01
+./pattern7.py 2019-12-01
+./pattern8.py 2019-12-01
+```
 
 # loadMin1.py
 Load min1 data files(retrieved from IB) to MongoDB
