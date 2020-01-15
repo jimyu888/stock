@@ -30,8 +30,7 @@ def getDailyData(startDate, endDate):
 		daily.append(d)
 	return daily
 
-def saveDailyToMongo(data):
-	client = pymongo.MongoClient('mongodb://mongodb_host:27017/')
+def saveDailyToMongo(data, client):
 	db = client['stock']
 	finvizDaily = db['finvizDaily']
 	for d in data:
@@ -43,7 +42,9 @@ def saveDailyToMongo(data):
 # get command line parameters
 startDate = sys.argv[1] if (len(sys.argv)>=2 and sys.argv[1]!='') else date.today().strftime("%Y-%m-%d")
 endDate = sys.argv[2] if (len(sys.argv)>=3 and sys.argv[2]!='') else date.today().strftime("%Y-%m-%d")
+host = sys.argv[3] if (len(sys.argv)>=4 and sys.argv[3]!='') else 'mongodb_host'
+client = pymongo.MongoClient('mongodb://'+host+':27017/')
 print 'Start Date :', startDate
 print 'End Date   :', endDate
 data = getDailyData(startDate, endDate)
-saveDailyToMongo(data)
+saveDailyToMongo(data, client)
